@@ -50,7 +50,7 @@ $(function() {
 				return;
 			}
 		}
-		$(this).unbind(event);
+		$(this).hide();
 		step3()
 	});
 });
