@@ -9,8 +9,8 @@
 		<% (1..Integer(@iter)).each do |n| %>
 		<tr>
 			<td><%= "Class #{n}" %></td>
-			<td><%= text_field_tag "total_#{n}" %></td>
-			<td><%= text_field_tag "comp_#{n}" %></td>
+			<td><%= text_field_tag "total_#{n}",nil, {:class => "totalfield"} %></td>
+			<td><%= text_field_tag "comp_#{n}",nil, {:class => "completedfield"} %></td>
 			<td>	
 				<div class="radio">
 					<%= radio_button_tag "radio#{n}", 'NS' %><%= label_tag "radio#{n}_NS", "NS" %>

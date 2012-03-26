@@ -1,7 +1,39 @@
 <script>
 	$(function() {
 		$(".sbutton" ).button();
+		var v = $("#new_survey").validate({
+			errorClass: "warning",
+			onkeyup: false,
+			onblur: false,
+			submitHandler: function() {
+				alert("Submitted, thanks!");
+			}
+		});
+		$("#step2 .sbutton").click(function() {
+			for(i=1;i<=$("#classnum").val();i++){
+				if($("input[name=radio"+i+"]:checked").val()==undefined){
+					alert("You need to select a division for ALL of your clases.");
+					return;
+				}
+				alert
+				if($("#total_"+i).val()==""){
+					alert("Please enter the total amount of readings for ALL your classes.");
+					return;
+				}
+				if($("#comp_"+i).val()==""){
+					alert("Please enter the amount of readings completed for ALL your classes.");
+					return;
+				}
+				if(parseInt($("#comp_"+i).val()) > parseInt($("#total_"+i).val())){
+					alert("Oops. For class "+i+", you completed more pages than you were assigned! Please correct this.");
+					return;
+				}
+			}
+			$(this).hide();
+			step3()
+		});
 	});
+	
 	
 	function step2(){
   		$.ajax({
@@ -77,7 +109,7 @@
   </div>
   
   <div id="step2" style="display:none;">
-	<div class="sbutton" onclick="step3()">On to the last step!</div>
+	<div class="sbutton"">On to the last step!</div>
   </div>
   <div id="step3" style="display:none;">
   
