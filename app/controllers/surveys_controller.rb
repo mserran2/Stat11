@@ -15,6 +15,7 @@ class SurveysController < ApplicationController
   # GET /surveys/1.json
   def show
     @survey = Survey.find(params[:id])
+    @subs = @survey.subrecords
 
     respond_to do |format|
       format.html # show.html.erb
@@ -43,10 +44,16 @@ class SurveysController < ApplicationController
   # POST /surveys.json
   def create
     @survey = Survey.new(params[:survey])
+    puts params
 
     respond_to do |format|
       if @survey.save
-        format.html { redirect_to @survey, notice: 'Survey was successfully created.' }
+        (1..Integer(params[:classnum])).each do |line|
+          Subrecord.create(:survey_id => @survey.id, :division => params["radio#{line}"],
+           :total_read => params["total_#{line}"], :complete_read => params["comp_#{line}"],
+           :satisfaction => params["rating#{line}"])
+        end
+        format.html { redirect_to @survey, notice: 'You completed the survey. Thank you!' }
         format.json { render json: @survey, status: :created, location: @survey }
       else
         format.html { render action: "new" }
@@ -58,6 +65,8 @@ class SurveysController < ApplicationController
   # PUT /surveys/1
   # PUT /surveys/1.json
   def update
+    render :text => "Sorry. Survey data cannot be changed."
+=begin
     @survey = Survey.find(params[:id])
 
     respond_to do |format|
@@ -69,11 +78,14 @@ class SurveysController < ApplicationController
         format.json { render json: @survey.errors, status: :unprocessable_entity }
       end
     end
+=end
   end
 
   # DELETE /surveys/1
   # DELETE /surveys/1.json
   def destroy
+    render :text => "Sorry. Survey data definitely cannot be destroyed!"
+=begin
     @survey = Survey.find(params[:id])
     @survey.destroy
 
@@ -81,6 +93,7 @@ class SurveysController < ApplicationController
       format.html { redirect_to surveys_url }
       format.json { head :ok }
     end
+=end
   end
   
   def genTable

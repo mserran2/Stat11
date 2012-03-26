@@ -3,8 +3,29 @@
 <p>
   <b>Class year:</b>
   <%= @survey.class_year %>
+  <b>Number of Classes</b>
+  <%= @subs.size %>
 </p>
 
+<table>
+	<thead>
+		<th></th>
+		<th>Total Readings</th>
+		<th>Completed Readings</th>
+		<th>Division</th>
+		<th>Coverage Satisfaction</th>
+	</thead>
+	<tbody>
+		<% (0...@subs.size).each do |n| %>
+		<tr>
+			<td><%= "Course #{n+1}" %></td>
+			<td><%= @subs[n].total_read %></td>
+			<td><%= @subs[n].complete_read %></td>
+			<td><%= @subs[n].division %></td>
+			<td><%= @subs[n].satisfaction %></td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
 
-<%= link_to 'Edit', edit_survey_path(@survey) %> |
-<%= link_to 'Back', surveys_path %>
+

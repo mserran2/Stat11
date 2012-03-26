@@ -1,90 +1,6 @@
-<script>
-	$(function() {
-		$(".sbutton" ).button();
-		var v = $("#new_survey").validate({
-			errorClass: "warning",
-			onkeyup: false,
-			onblur: false,
-			submitHandler: function() {
-				alert("Submitted, thanks!");
-			}
-		});
-		$("#step2 .sbutton").click(function() {
-			for(i=1;i<=$("#classnum").val();i++){
-				if($("input[name=radio"+i+"]:checked").val()==undefined){
-					alert("You need to select a division for ALL of your clases.");
-					return;
-				}
-				alert
-				if($("#total_"+i).val()==""){
-					alert("Please enter the total amount of readings for ALL your classes.");
-					return;
-				}
-				if($("#comp_"+i).val()==""){
-					alert("Please enter the amount of readings completed for ALL your classes.");
-					return;
-				}
-				if(parseInt($("#comp_"+i).val()) > parseInt($("#total_"+i).val())){
-					alert("Oops. For class "+i+", you completed more pages than you were assigned! Please correct this.");
-					return;
-				}
-			}
-			$(this).hide();
-			step3()
-		});
-	});
-	
-	
-	function step2(){
-  		$.ajax({
-  		  url: "/surveys/gentable/" + $("#classnum").val(),
-  		  error: function(){/*alert("Oops! Something bad happened. Error# 503. Try it again if it still doesn't work contact the Dean of Housing.")*/},
-		  statusCode: {
-		    404: function() {
-		    },
-		    200: function(data) {
-		    	$("#step1").hide("clip")
-		    	$("#step2 .sbutton").before(data)
-		    	$(".radio").buttonset();
-		    	setTimeout(function() {$("#step2").show("slide")}, 400);
-		    }
-		  }
-		});
-		
-
-	}
-	function step3(){
-		$("#step2").hide("clip")
-		//$("#step3 .sbutton").before(data)
-		//$(".radio").buttonset();
-		options = ['','Not at all', 'Somewhat', 'Neither here nor there', 'Well Covered', "Exremely well!"]
-		for(i=1;i<=$("#classnum").val();i++){
-			$("#step3 .actions").before('<div class="opcla" id="opcla'+i+'"></div>')
-			radio = $("input[name=radio"+i+"]:checked").val();
-			tot = $("#total_"+i).val();
-			comp = $("#comp_"+i).val();
-			$("#opcla"+i).append("<h3>Class #"+i+" | "+radio+" division | "+tot+" pages total | "+comp+" pages completed</h3>")
-			$("#opcla"+i).append('For class '+i+', How well do you think readings were incorporated into class discussions? (Use Slider)');
-			$("#opcla"+i).append('<div class="slider" id="valcla'+i+'"></div>');
-			$("#opcla"+i).append('<div class="slide_stat" id="slide_stat'+i+'">Neither here nor there</div>');
-			$("#opcla"+i).append('<input id="rating'+i+'" name="rating'+i+'" type="hidden" value="3" />');
-			temp = i
-			$("#valcla"+i).slider({
-				range: "min",
-				value: 3,
-				min: 1,
-				max: 5,
-				slide: function( event, ui) {
-					
-					var local = this.id.charAt(this.id.length-1);
-					$("#slide_stat"+local).html(options[ui.value]);
-					$("#rating"+local).val(ui.value);
-				}
-			});
-		}
-		setTimeout(function() {$("#step3").show("slide")}, 400);
-	}
-</script>
+<div id="dialog-modal" title="Oops! There's an error...">
+	<p></p>
+</div>
 <%= form_for(@survey) do |f| %>
   <% if @survey.errors.any? %>
     <div id="error_explanation">
@@ -98,21 +14,25 @@
     </div>
   <% end %>
 	<div id="step1">
+		<p class="inst">Instructions: To start, please simply select your class year as well as the number of courses you are currently enrolled in.</p>
 	  <div class="field">
 	    <%= f.label :class_year %><br />
 	    <%= f.select :class_year, options_for_select((2012..2015).collect {|n| [ n, n ]}, :include_blank => true) %>
 	  </div>
-	  How many classes are you taking this semester?
-	  <%= select_tag :classnum, options_for_select((1..6).collect {|n| [ pluralize(n,"Class"), n ]}, :selected => "4")%><br />
+	  How many courses are you taking this semester?
+	  <%= select_tag :classnum, options_for_select((1..6).collect {|n| [ pluralize(n,"Course"), n ]}, :selected => "4")%><br />
 	  
-	  <div class="sbutton" onclick="step2()">Start Survey</div>
+	  <div class="sbutton">Start Survey</div>
   </div>
   
-  <div id="step2" style="display:none;">
+  <div id="step2">
+  	<p class="inst">Instructions: For each course, please tell us how many pages of reading you are assigned as well as how many you actually complete. 
+  		Additionally, please tell us which division the course belongs to. If the course is crosslisted, pick the division under which
+  		you registered for the course. If your course does not fit into any of the divisions, select "other".</p>
 	<div class="sbutton"">On to the last step!</div>
   </div>
   <div id="step3" style="display:none;">
-  
+  	<p class="inst">Instructions: You're almost done. For each class please read the question and use the slider to mark your answer.</p>
   <div class="actions">
     <%= f.submit 'Submit Survey', :class => "sbutton" %>
   </div>
