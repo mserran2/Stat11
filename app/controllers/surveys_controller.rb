@@ -14,7 +14,8 @@ class SurveysController < ApplicationController
   # GET /surveys/1
   # GET /surveys/1.json
   def show
-    @survey = Survey.find(params[:id])
+    id = (Base64.decode64(params[:id]).to_i)/17
+    @survey = Survey.find(id)
     @subs = @survey.subrecords
 
     respond_to do |format|
@@ -53,11 +54,9 @@ class SurveysController < ApplicationController
            :total_read => params["total_#{line}"], :complete_read => params["comp_#{line}"],
            :satisfaction => params["rating#{line}"])
         end
-        format.html { redirect_to @survey, notice: 'You completed the survey. Thank you!' }
-        format.json { render json: @survey, status: :created, location: @survey }
+        format.html { redirect_to survey_path(Base64.encode64((@survey.id*17).to_s)), notice: 'You completed the survey. Thank you!' }
       else
         format.html { render action: "new" }
-        format.json { render json: @survey.errors, status: :unprocessable_entity }
       end
     end
   end
