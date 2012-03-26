@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  survey_id: 1
+  division: MyString
+  total_read: 1
+  complete_read: 1
+  satisfaction: 1
+
+two:
+  survey_id: 1
+  division: MyString
+  total_read: 1
+  complete_read: 1
+  satisfaction: 1

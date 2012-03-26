@@ -1,0 +1,88 @@
+<script>
+	$(function() {
+		$(".sbutton" ).button();
+	});
+	
+	function step2(){
+  		$.ajax({
+  		  url: "/surveys/gentable/" + $("#classnum").val(),
+  		  error: function(){/*alert("Oops! Something bad happened. Error# 503. Try it again if it still doesn't work contact the Dean of Housing.")*/},
+		  statusCode: {
+		    404: function() {
+		    },
+		    200: function(data) {
+		    	$("#step1").hide("clip")
+		    	$("#step2 .sbutton").before(data)
+		    	$(".radio").buttonset();
+		    	setTimeout(function() {$("#step2").show("slide")}, 400);
+		    }
+		  }
+		});
+		
+
+	}
+	function step3(){
+		$("#step2").hide("clip")
+		//$("#step3 .sbutton").before(data)
+		//$(".radio").buttonset();
+		options = ['','Not at all', 'Somewhat', 'Neither here nor there', 'Well Covered', "Exremely well!"]
+		for(i=1;i<=$("#classnum").val();i++){
+			$("#step3 .actions").before('<div class="opcla" id="opcla'+i+'"></div>')
+			radio = $("input[name=radio"+i+"]:checked").val();
+			tot = $("#total_"+i).val();
+			comp = $("#comp_"+i).val();
+			$("#opcla"+i).append("<h3>Class #"+i+" | "+radio+" division | "+tot+" pages total | "+comp+" pages completed</h3>")
+			$("#opcla"+i).append('For class '+i+', How well do you think readings were incorporated into class discussions? (Use Slider)');
+			$("#opcla"+i).append('<div class="slider" id="valcla'+i+'"></div>');
+			$("#opcla"+i).append('<div class="slide_stat" id="slide_stat'+i+'">Neither here nor there</div>');
+			$("#opcla"+i).append('<input id="rating'+i+'" name="rating'+i+'" type="hidden" value="3" />');
+			temp = i
+			$("#valcla"+i).slider({
+				range: "min",
+				value: 3,
+				min: 1,
+				max: 5,
+				slide: function( event, ui) {
+					
+					var local = this.id.charAt(this.id.length-1);
+					$("#slide_stat"+local).html(options[ui.value]);
+					$("#rating"+local).val(ui.value);
+				}
+			});
+		}
+		setTimeout(function() {$("#step3").show("slide")}, 400);
+	}
+</script>
+<%= form_for(@survey) do |f| %>
+  <% if @survey.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@survey.errors.count, "error") %> prohibited this survey from being saved:</h2>
+
+      <ul>
+      <% @survey.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+	<div id="step1">
+	  <div class="field">
+	    <%= f.label :class_year %><br />
+	    <%= f.select :class_year, options_for_select((2012..2015).collect {|n| [ n, n ]}, :include_blank => true) %>
+	  </div>
+	  How many classes are you taking this semester?
+	  <%= select_tag :classnum, options_for_select((1..6).collect {|n| [ pluralize(n,"Class"), n ]}, :selected => "4")%><br />
+	  
+	  <div class="sbutton" onclick="step2()">Start Survey</div>
+  </div>
+  
+  <div id="step2" style="display:none;">
+	<div class="sbutton" onclick="step3()">On to the last step!</div>
+  </div>
+  <div id="step3" style="display:none;">
+  
+  <div class="actions">
+    <%= f.submit 'Submit Survey', :class => "sbutton" %>
+  </div>
+  </div>
+<% end %>

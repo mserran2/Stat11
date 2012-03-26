@@ -1,0 +1,24 @@
+body {
+	margin:0;
+	background-color:#91C05E;
+}
+
+#content_container {
+	margin:100px auto 0;
+	width:800px;
+	min-height:300px;
+	background-color: #ffffff;
+	border-radius: 5px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	border: 1px solid #2e90bd;
+	padding:20px
+}
+
+.opcla {
+	margin:0 0 20px 0;
+}
+
+.opcla .slider {
+	width:300px;
+}
