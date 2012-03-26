@@ -1,6 +1,7 @@
 body {
 	margin:0;
-	background-color:#91C05E;
+	background-color:/*#FFFFFF;*/#91C05E;
+	/*background-image:url("/assets/background_image.png");*/
 	font-family:"Comic Sans MS";
 }
 #page_container{
@@ -74,5 +75,16 @@ input:focus {
 }
 
 #step2 {
+	display:none;
+}
+
+#worm {
+	position:absolute;
+	bottom:0;
+	right:0;
+	background-image:url('http://3.bp.blogspot.com/_Qm2M81VKS-s/SYIB1bntvLI/AAAAAAAADgY/FKxbolPCwXM/s400/bookworm.jpg');
+	height:237px;
+	width:300px;
+	z-index:-1;
 	display:none;
 }
