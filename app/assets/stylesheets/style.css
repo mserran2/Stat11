@@ -86,9 +86,13 @@ input:focus {
 	position:absolute;
 	bottom:0;
 	right:0;
-	background-image:url('http://3.bp.blogspot.com/_Qm2M81VKS-s/SYIB1bntvLI/AAAAAAAADgY/FKxbolPCwXM/s400/bookworm.jpg');
+	background-image:url('/assets/cater.jpeg');
 	height:237px;
 	width:300px;
 	z-index:-1;
 	
 }
+
+#footer { color:#cccccc;
+			margin:20px 20px 20px;
+			text-align:right;}
