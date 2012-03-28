@@ -1,6 +1,7 @@
 Stat11::Application.routes.draw do
   root :to => "surveys#new"
-  resources :surveys
+  resources :surveys, :only => [:new, :create, :show]
+  match "/accurucada" => "surveys#index"
   match "/surveys/gentable/:id" => "surveys#genTable"
   #match "/surveys/:id" => "surveys#show", :as => "survey"
  
